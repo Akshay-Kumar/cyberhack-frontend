@@ -8,13 +8,16 @@ import Header from "./Header";
 import Config from "../../config/Config.json";
 import classes from "./Register.module.css";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 // import "./src/App.css";
 toast.configure();
 
-const ForgotPassword = () => {
+const ForgotPassValidation = () => {
   const navigate = useNavigate();
+  const params = useParams();
+  const user_id = params.user_id;
   const [inputs, setInputs] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -36,22 +39,24 @@ const ForgotPassword = () => {
     e.preventDefault();
     if (validate()) {
       //forgot password request
+      console.log('props.user_id', user_id);
+      inputs.user_id = user_id;
       axios
-      .post(`${Config.SERVER_URL + "api/users/forgotpassword"}`, inputs)
+      .post(`${Config.SERVER_URL + "api/users/validatetoken"}`, inputs)
       .then((res) => {
           if(res.data.user_id){
             console.log('message', res.data.message);
             console.log('user_id', res.data.user_id);
             toast.success(
-              res.data.message,
+              "Secret token verified successfully!",
               { position: toast.POSITION.TOP_CENTER },
               { autoClose: 5000 }
             );
-            navigate(`/ResetPasswordVerify/${res.data.user_id}`);
+            navigate(`/Updatepassword/${res.data.user_id}`);
           }
           else{
             toast.error(
-              "Invalid email!",
+              "Invalid secret token!",
               { position: toast.POSITION.TOP_CENTER },
               { autoClose: 5000 }
             );
@@ -67,19 +72,9 @@ const ForgotPassword = () => {
     let isValid = true;
     let error = {};
 
-    if (!inputs["email"]) {
+    if (!inputs["secret_token"]) {
       isValid = false;
-      error["email"] = "Please enter your email address.";
-    }
-
-    if (typeof inputs["email"] !== "undefined") {
-      var pattern = new RegExp(
-        /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
-      );
-      if (!pattern.test(inputs["email"])) {
-        isValid = false;
-        error["email"] = "Please enter valid email address.";
-      }
+      error["secret_token"] = "Please enter secret code.";
     }
     setErrors(error);
 
@@ -90,13 +85,8 @@ const ForgotPassword = () => {
       <Header />
       <Container>
         <h1 className=" text-primary mt-5 p-3 text-center rounded">
-          Forgot your password
+          Enter scret token sent to your email
         </h1>
-        <p className=" text-primary mt-5 p-3 text-center rounded">
-          No problem.Enter your Email here and we'll send you a secret code to reset
-          it.
-          {/* {msg} */}
-        </p>
         <div
           className="d-flex justify-content-center  align-items-center"
           // style={{ height: "400px " }}
@@ -106,16 +96,16 @@ const ForgotPassword = () => {
           >
             <Form.Group className="mb-3" controlId="formBasicEmail">
               <Form.Label>
-                Enter Registered Email <span style={{ color: "red" }}> *</span>
+                Enter Secret Token <span style={{ color: "red" }}> *</span>
               </Form.Label>
               <Form.Control
-                type="email"
-                placeholder="Enter email"
-                name="email"
-                value={inputs.email}
+                type="text"
+                placeholder="Enter secret code"
+                name="secret_token"
+                value={inputs.secret_token}
                 onChange={handleChange}
               />
-              <p style={{ color: "red" }}> {errors.email} </p>
+              <p style={{ color: "red" }}> {errors.secret_token} </p>
             </Form.Group>
             <Col className={classes.actions}>
               <Button
@@ -128,16 +118,6 @@ const ForgotPassword = () => {
                 Submit
               </Button>
               {/* <br/> */}
-              <Link to="/Login">
-                <Button
-                  variant="success"
-                  type="submit"
-                  className="mt-4 "
-                  style={{ marginLeft: "10px" }}
-                >
-                  Back to Login
-                </Button>
-              </Link>
             </Col>
           </Form>
         </div>
@@ -151,4 +131,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default ForgotPassValidation;
