@@ -26,8 +26,8 @@ function Reports() {
 
   const [forminputs, setFormInputs] = useState({});
   const setFilterDates = useState({
-    startdate: "",
-    enddate: "",
+    start_date: "",
+    end_date: "",
   })[1];
 
   const [errors, setErrors] = useState({});
@@ -38,7 +38,7 @@ function Reports() {
     const readAuthToken = jwtDecode(token);
     const user_id = readAuthToken.user_id;
     */
-    console.log('trying to fetch jobs data')
+    console.log('trying to fetch jobs data');
     axios
       .get(`${Config.SERVER_URL + "api/users/jobs"}`)
       .then((res) => {
@@ -55,7 +55,7 @@ function Reports() {
     if (!forminputs["start_date"] && !forminputs["end_date"]) {
       setErrors({});
     }
-    setErrors((values) => ({ ...values, startdate: error }));
+    setErrors((values) => ({ ...values, start_date: error }));
   };
 
   const validateEnd = () => {
@@ -89,24 +89,27 @@ function Reports() {
     if (validate()) {
       setFilterDates({ ...forminputs });
     }
-    let stdate = new Date(forminputs.startdate);
-    let endate = new Date(forminputs.enddate);
+    let stdate = new Date(forminputs.start_date);
+    let endate = new Date(forminputs.end_date);
+    console.log("reportsData", reportsData);
     let newData = reportsData.filter((report) => {
-      // console.log(report);
-      let date = new Date(report.startDate);
+      console.log("report",report);
+      let date = new Date(report.start_date);
       if (date >= stdate && date <= endate) {
         return report;
       }
-      // return;
+        return;
     });
-    // console.log(newData);
+    console.log("newData", newData);
     setReportsData(newData);
   };
-  // console.log(reportsData);
+  //console.log("reportsData", reportsData);
   const handleChange = (event) => {
     const name = event.target.name;
     const value = event.target.value;
     setFormInputs((values) => ({ ...values, [name]: value }));
+    console.log("name", name, "value", value);
+    
   };
   const Jobs = [...reportsData];
 
@@ -150,7 +153,7 @@ function Reports() {
               <Row>
                 <Col>
                   <FormLabel className={classes.textstyl}>
-                    <b>StartDate</b>
+                    <b>Start Date</b>
                   </FormLabel>
                 </Col>
                 <Col className={classes.input}>
@@ -176,7 +179,7 @@ function Reports() {
               <Row>
                 <Col>
                   <FormLabel className={classes.textstyl}>
-                    <b>EndDate</b>
+                    <b>End Date</b>
                   </FormLabel>
                 </Col>
                 <Col className={classes.input}>
