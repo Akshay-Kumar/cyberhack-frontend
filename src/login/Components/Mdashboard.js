@@ -7,10 +7,11 @@ import jwtDecode from "jwt-decode";
 
 function Mdashboard() {
   // const dispatch = useDispatch();
-  const selectauthToken = (rootstate) => rootstate.authToken;
-
+  console.log("inside Mdashboard");
   const authToken = localStorage.getItem("token");
-  const redToken = useSelector(selectauthToken);
+
+  console.log("authToken", authToken);
+
 
   // if(redToken == {}){
   //   if(authToken){
@@ -22,7 +23,8 @@ function Mdashboard() {
   //   dispatch({ type: "SETAUTHTOKEN", data: authToken });
   // }
 
-  if (authToken) {
+  if (authToken !== "undefined" && authToken !== null && authToken !== undefined) {
+    console.log("inside if block", authToken);
     const redAuthToken = jwtDecode(authToken);
     // console.log("lol", decoded);
     if (redAuthToken.role_name === "admin") {
@@ -36,9 +38,7 @@ function Mdashboard() {
     }
   }
   return (
-    <>
       <Login />
-    </>
   );
 }
 

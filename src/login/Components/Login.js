@@ -13,6 +13,7 @@ import Config from "../../config/Config.json";
 // };
 
 const Login = () => {
+  console.log("at login page");
   const [inputs, setInputs] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [backendErrors, setBackendErrors] = useState({

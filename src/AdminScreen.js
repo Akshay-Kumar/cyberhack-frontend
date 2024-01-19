@@ -42,6 +42,7 @@ function AdminScreen() {
           <Route path="/manage-jobs" element={<ManageJobsPage />} />
 
           <Route path="/reports" element={<ReportsPage />} />
+
           <Route path="/change-password" element={<ChangePassword />} />
 
           <Route path="*" element={<PageNotFound />} />

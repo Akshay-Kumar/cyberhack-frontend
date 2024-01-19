@@ -4,22 +4,20 @@ import classes from "./ApplicantItem.module.css";
 import Config from "../../../config/Config.json";
 
 const ShortlistItem = ({ setAction, ...props }) => {
-  const applicantItemId = props.applicantItem.job_id;
+  const applicant_user_id= props.applicantItem.user_id;
+  const job_id= props.applicantItem.job_id;
   const token = props.token;
+
   const viewResumeHandler = () => {
     const readAuthToken = jwtDecode(token);
-    const user_id = readAuthToken.user_id;
+    const provider_id = readAuthToken.user_id;
     axios
       .get(
         `${
           Config.SERVER_URL +
-          "provider/applicants/view-resume/" +
-          applicantItemId
+          "api/posts/provider/view-resume/" + applicant_user_id+ "/" + provider_id + "/" + job_id
         }`,
         {
-          headers: {
-            Authorization: "Bearer " + token,
-          },
           responseType: "blob",
         }
       )

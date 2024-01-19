@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import jwtDecode from "jwt-decode";
 import { Link, useNavigate, NavLink } from "react-router-dom";
 import classes from "./Navigation.module.css";
@@ -23,6 +23,7 @@ const Navigation = () => {
     navigate("/", { replace: true });
   };
 
+  /*
   const deleteAccountHandler = () => {
     //delete account code
     const user_id = redAuthToken.user_id;
@@ -41,6 +42,24 @@ const Navigation = () => {
     // clear token and go to login page
     dispatch({ type: "CLEARAUTHTOKEN" });
     navigate("/", { replace: true });
+  };
+  */
+
+  const userAccountHandler = () => {
+    //fetch user details code
+    const user_id = redAuthToken.user_id;
+    axios
+      .get(
+        `${Config.SERVER_URL + "api/users/" + user_id}`)
+      .then((result) => {
+        console.log("userInfo", result);
+        toast.success(result.data.message);
+        navigate("/UserProfile", {state: result.data.user});
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Oops something went wrong");
+      });
   };
 
   return (
@@ -199,12 +218,24 @@ const Navigation = () => {
                   Change Password
                 </Link>
                 <Dropdown.Divider />
+                {
+                  /*
+                    <Dropdown.Item
+                      as={"button"}
+                      onClick={deleteAccountHandler}
+                      className={classes.changePassword}
+                    >
+                      Delete account
+                    </Dropdown.Item>
+                    <Dropdown.Divider />
+                  */
+                }
                 <Dropdown.Item
                   as={"button"}
-                  onClick={deleteAccountHandler}
+                  onClick={userAccountHandler}
                   className={classes.changePassword}
                 >
-                  Delete account
+                  Manage User account
                 </Dropdown.Item>
                 <Dropdown.Divider />
                 <Dropdown.Item
